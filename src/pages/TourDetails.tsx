@@ -19,6 +19,14 @@ interface Tour {
   duration: string | null;
   image_url: string | null;
   destination_id: string | null;
+  itinerary?: any;
+  included?: string[] | null;
+  excluded?: string[] | null;
+  highlights?: string[] | null;
+  max_group_size?: number | null;
+  min_age?: number | null;
+  difficulty_level?: string | null;
+  available_dates?: string[] | null;
 }
 
 interface Destination {
@@ -118,7 +126,7 @@ const TourDetails = () => {
     return null;
   }
 
-  const highlights = [
+  const defaultHighlights = [
     "Professional tour guide",
     "All accommodations included",
     "Daily breakfast and select meals",
@@ -126,6 +134,12 @@ const TourDetails = () => {
     "Entrance fees to attractions",
     "Travel insurance"
   ];
+
+  const displayHighlights = tour.highlights && tour.highlights.length > 0 
+    ? tour.highlights 
+    : tour.included && tour.included.length > 0 
+    ? tour.included 
+    : defaultHighlights;
 
   return (
     <div className="min-h-screen bg-background">
@@ -193,33 +207,59 @@ const TourDetails = () => {
               </TabsContent>
               
               <TabsContent value="itinerary" className="mt-6">
-                <h3 className="text-xl font-semibold mb-4">Sample Itinerary</h3>
+                <h3 className="text-xl font-semibold mb-4">
+                  {tour.itinerary && Array.isArray(tour.itinerary) && tour.itinerary.length > 0 ? "Day-by-Day Itinerary" : "Sample Itinerary"}
+                </h3>
                 <div className="space-y-4">
-                  <div className="border-l-2 border-primary pl-4">
-                    <h4 className="font-semibold">Day 1-2: Arrival & Orientation</h4>
-                    <p className="text-muted-foreground text-sm">Meet your tour guide and fellow travelers. City orientation and welcome dinner.</p>
-                  </div>
-                  <div className="border-l-2 border-primary pl-4">
-                    <h4 className="font-semibold">Day 3-5: Main Attractions</h4>
-                    <p className="text-muted-foreground text-sm">Explore the highlights and hidden gems with guided tours and free time.</p>
-                  </div>
-                  <div className="border-l-2 border-primary pl-4">
-                    <h4 className="font-semibold">Final Days: Leisure & Departure</h4>
-                    <p className="text-muted-foreground text-sm">Free time for personal exploration before departure.</p>
-                  </div>
+                  {tour.itinerary && Array.isArray(tour.itinerary) && tour.itinerary.length > 0 ? (
+                    tour.itinerary.map((day: any, index: number) => (
+                      <div key={index} className="border-l-2 border-primary pl-4">
+                        <h4 className="font-semibold">{day.title || `Day ${index + 1}`}</h4>
+                        <p className="text-muted-foreground text-sm">{day.description || day.activities || ""}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <>
+                      <div className="border-l-2 border-primary pl-4">
+                        <h4 className="font-semibold">Day 1-2: Arrival & Orientation</h4>
+                        <p className="text-muted-foreground text-sm">Meet your tour guide and fellow travelers. City orientation and welcome dinner.</p>
+                      </div>
+                      <div className="border-l-2 border-primary pl-4">
+                        <h4 className="font-semibold">Day 3-5: Main Attractions</h4>
+                        <p className="text-muted-foreground text-sm">Explore the highlights and hidden gems with guided tours and free time.</p>
+                      </div>
+                      <div className="border-l-2 border-primary pl-4">
+                        <h4 className="font-semibold">Final Days: Leisure & Departure</h4>
+                        <p className="text-muted-foreground text-sm">Free time for personal exploration before departure.</p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </TabsContent>
               
               <TabsContent value="included" className="mt-6">
                 <h3 className="text-xl font-semibold mb-4">What's Included</h3>
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {highlights.map((item, index) => (
+                  {displayHighlights.map((item, index) => (
                     <div key={index} className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                       <span className="text-muted-foreground">{item}</span>
                     </div>
                   ))}
                 </div>
+                
+                {tour.excluded && tour.excluded.length > 0 && (
+                  <>
+                    <h3 className="text-xl font-semibold mb-4 mt-8">What's Not Included</h3>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {tour.excluded.map((item, index) => (
+                        <div key={index} className="flex items-start gap-2">
+                          <span className="text-muted-foreground">• {item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </TabsContent>
             </Tabs>
           </div>
@@ -257,9 +297,30 @@ const TourDetails = () => {
                     <Users className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="text-sm text-muted-foreground">Group Size</p>
-                      <p className="font-semibold">Small groups (8-16)</p>
+                      <p className="font-semibold">
+                        {tour.max_group_size ? `Up to ${tour.max_group_size} people` : "Small groups (8-16)"}
+                      </p>
                     </div>
                   </div>
+
+                  {tour.min_age && tour.min_age > 0 && (
+                    <div className="flex items-center gap-3">
+                      <Users className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Minimum Age</p>
+                        <p className="font-semibold">{tour.min_age} years</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {tour.difficulty_level && (
+                    <div className="flex items-center gap-3">
+                      <Badge variant="secondary" className="capitalize">
+                        {tour.difficulty_level}
+                      </Badge>
+                      <p className="text-sm text-muted-foreground">Difficulty Level</p>
+                    </div>
+                  )}
 
                   <div className="flex items-center gap-3">
                     <Calendar className="h-5 w-5 text-muted-foreground" />

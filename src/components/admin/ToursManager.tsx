@@ -18,6 +18,13 @@ interface Tour {
   price: number | null;
   duration: string | null;
   image_url: string | null;
+  itinerary?: any;
+  included?: string[] | null;
+  excluded?: string[] | null;
+  highlights?: string[] | null;
+  max_group_size?: number | null;
+  min_age?: number | null;
+  difficulty_level?: string | null;
 }
 
 interface Destination {
@@ -39,6 +46,13 @@ const ToursManager = () => {
     image_url: "",
     price: "",
     duration: "",
+    max_group_size: "",
+    min_age: "",
+    difficulty_level: "moderate",
+    itinerary: "",
+    included: "",
+    excluded: "",
+    highlights: "",
   });
 
   useEffect(() => {
@@ -79,6 +93,13 @@ const ToursManager = () => {
         image_url: formData.image_url || null,
         price: formData.price ? parseFloat(formData.price) : null,
         duration: formData.duration || null,
+        max_group_size: formData.max_group_size ? parseInt(formData.max_group_size) : null,
+        min_age: formData.min_age ? parseInt(formData.min_age) : null,
+        difficulty_level: formData.difficulty_level || "moderate",
+        itinerary: formData.itinerary ? JSON.parse(formData.itinerary) : [],
+        included: formData.included ? formData.included.split('\n').filter(i => i.trim()) : [],
+        excluded: formData.excluded ? formData.excluded.split('\n').filter(i => i.trim()) : [],
+        highlights: formData.highlights ? formData.highlights.split('\n').filter(i => i.trim()) : [],
       };
 
       if (editingId) {
@@ -119,6 +140,13 @@ const ToursManager = () => {
       image_url: tour.image_url || "",
       price: tour.price?.toString() || "",
       duration: tour.duration || "",
+      max_group_size: tour.max_group_size?.toString() || "",
+      min_age: tour.min_age?.toString() || "",
+      difficulty_level: tour.difficulty_level || "moderate",
+      itinerary: tour.itinerary ? JSON.stringify(tour.itinerary, null, 2) : "",
+      included: Array.isArray(tour.included) ? tour.included.join('\n') : "",
+      excluded: Array.isArray(tour.excluded) ? tour.excluded.join('\n') : "",
+      highlights: Array.isArray(tour.highlights) ? tour.highlights.join('\n') : "",
     });
     setDialogOpen(true);
   };
@@ -152,6 +180,13 @@ const ToursManager = () => {
       image_url: "",
       price: "",
       duration: "",
+      max_group_size: "",
+      min_age: "",
+      difficulty_level: "moderate",
+      itinerary: "",
+      included: "",
+      excluded: "",
+      highlights: "",
     });
     setEditingId(null);
   };
@@ -248,6 +283,93 @@ const ToursManager = () => {
                   onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                 />
               </div>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="max_group_size">Max Group Size</Label>
+                <Input
+                  id="max_group_size"
+                  type="number"
+                  placeholder="e.g., 16"
+                  value={formData.max_group_size}
+                  onChange={(e) => setFormData({ ...formData, max_group_size: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="min_age">Min Age</Label>
+                <Input
+                  id="min_age"
+                  type="number"
+                  placeholder="e.g., 18"
+                  value={formData.min_age}
+                  onChange={(e) => setFormData({ ...formData, min_age: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="difficulty_level">Difficulty</Label>
+                <Select
+                  value={formData.difficulty_level}
+                  onValueChange={(value) => setFormData({ ...formData, difficulty_level: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="easy">Easy</SelectItem>
+                    <SelectItem value="moderate">Moderate</SelectItem>
+                    <SelectItem value="challenging">Challenging</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="highlights">Highlights (one per line)</Label>
+              <Textarea
+                id="highlights"
+                placeholder="Professional tour guide&#10;All meals included&#10;Luxury accommodation"
+                value={formData.highlights}
+                onChange={(e) => setFormData({ ...formData, highlights: e.target.value })}
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="included">Included (one per line)</Label>
+              <Textarea
+                id="included"
+                placeholder="Hotel accommodation&#10;Daily breakfast&#10;Airport transfers"
+                value={formData.included}
+                onChange={(e) => setFormData({ ...formData, included: e.target.value })}
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="excluded">Not Included (one per line)</Label>
+              <Textarea
+                id="excluded"
+                placeholder="International flights&#10;Personal expenses&#10;Travel insurance"
+                value={formData.excluded}
+                onChange={(e) => setFormData({ ...formData, excluded: e.target.value })}
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="itinerary">Itinerary (JSON format)</Label>
+              <Textarea
+                id="itinerary"
+                placeholder='[{"title":"Day 1: Arrival","description":"Check-in and welcome dinner"},{"title":"Day 2: City Tour","description":"Explore main attractions"}]'
+                value={formData.itinerary}
+                onChange={(e) => setFormData({ ...formData, itinerary: e.target.value })}
+                rows={4}
+                className="font-mono text-sm"
+              />
+              <p className="text-xs text-muted-foreground">
+                Optional: Enter itinerary as JSON array with title and description for each day
+              </p>
             </div>
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
