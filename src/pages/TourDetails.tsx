@@ -145,11 +145,11 @@ const TourDetails = () => {
     <div className="min-h-screen bg-background">
       <TravelHeader />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pt-24 pb-16">
         <Button
           variant="ghost"
           onClick={() => navigate("/")}
-          className="mb-6"
+          className="mb-8 hover:bg-primary/10"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Tours
@@ -160,11 +160,11 @@ const TourDetails = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Hero Image */}
             {tour.image_url && (
-              <div className="rounded-lg overflow-hidden">
+              <div className="rounded-xl overflow-hidden shadow-lg">
                 <img
                   src={tour.image_url}
                   alt={tour.title}
-                  className="w-full h-[400px] object-cover"
+                  className="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
             )}
@@ -187,10 +187,10 @@ const TourDetails = () => {
 
             {/* Tour Details Tabs */}
             <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
-                <TabsTrigger value="included">What's Included</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 h-auto p-1">
+                <TabsTrigger value="overview" className="py-3">Overview</TabsTrigger>
+                <TabsTrigger value="itinerary" className="py-3">Itinerary</TabsTrigger>
+                <TabsTrigger value="included" className="py-3">What's Included</TabsTrigger>
               </TabsList>
               
               <TabsContent value="overview" className="mt-6 space-y-4">
@@ -266,9 +266,9 @@ const TourDetails = () => {
 
           {/* Booking Sidebar */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-4">
-              <CardHeader>
-                <CardTitle>Book This Tour</CardTitle>
+            <Card className="sticky top-24 shadow-xl border-2">
+              <CardHeader className="bg-gradient-to-br from-primary/5 to-secondary/5">
+                <CardTitle className="text-2xl">Book This Tour</CardTitle>
                 <CardDescription>Secure your spot today</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -350,7 +350,7 @@ const TourDetails = () => {
 
                 <Button
                   size="lg"
-                  className="w-full"
+                  className="w-full text-lg py-6 shadow-lg hover:shadow-xl transition-all"
                   onClick={handleBookNow}
                   disabled={!isLoggedIn}
                 >
