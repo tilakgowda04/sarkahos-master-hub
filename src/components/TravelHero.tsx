@@ -23,11 +23,21 @@ const TravelHero = () => {
             Discover breathtaking destinations, create unforgettable memories, and experience the adventure of a lifetime.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button size="lg" variant="secondary" className="text-lg">
+            <Button 
+              size="lg" 
+              variant="secondary" 
+              className="text-lg"
+              onClick={() => document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               <Search className="mr-2 h-5 w-5" />
               Explore Destinations
             </Button>
-            <Button size="lg" variant="outline" className="text-lg bg-white/10 border-white/30 text-white hover:bg-white/20">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="text-lg bg-white/10 border-white/30 text-white hover:bg-white/20"
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               <MapPin className="mr-2 h-5 w-5" />
               Plan Your Trip
             </Button>
