@@ -84,7 +84,13 @@ const Destinations = () => {
                     {destination.price}
                   </div>
                 </div>
-                <Button className="w-full">View Details</Button>
+                <Button 
+                  className="w-full"
+                  aria-label={`View details for ${destination.title}`}
+                  onClick={() => document.getElementById('tours')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  View Details
+                </Button>
               </CardContent>
             </Card>
           ))}
